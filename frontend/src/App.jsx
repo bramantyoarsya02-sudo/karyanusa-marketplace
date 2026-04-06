@@ -1,0 +1,69 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import HomePage from './pages/HomePage';
+import CheckoutPage from './pages/CheckoutPage';
+import OrdersPage from './pages/OrdersPage';
+import CreateProductPage from './pages/CreateProductPage';
+
+const PrivateRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  if (loading) return (
+    <div className="min-h-screen bg-[var(--bg-color)] flex items-center justify-center transition-colors">
+      <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+  return user ? children : <Navigate to="/login" />;
+};
+
+const PublicRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  return user ? <Navigate to="/home" /> : children;
+};
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
+      <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+      <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+      <Route path="/home" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+      <Route path="/checkout" element={<PrivateRoute><CheckoutPage /></PrivateRoute>} />
+      <Route path="/orders" element={<PrivateRoute><OrdersPage /></PrivateRoute>} />
+      <Route path="/create-product" element={<PrivateRoute><CreateProductPage /></PrivateRoute>} />
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <CartProvider>
+          <AppRoutes />
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              className: 'glass border border-[var(--border-color)] text-[var(--text-primary)] font-medium',
+              style: {
+                background: 'var(--card-bg)',
+                color: 'var(--text-primary)',
+                backdropFilter: 'blur(12px)',
+                borderRadius: '12px',
+              },
+              success: { iconTheme: { primary: '#8b5cf6', secondary: '#fff' } },
+              error: { iconTheme: { primary: '#ef4444', secondary: '#fff' } },
+            }}
+          />
+        </CartProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
