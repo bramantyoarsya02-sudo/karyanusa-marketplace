@@ -35,7 +35,7 @@ function RatingModal({ item, orderId, onClose, onSuccess }) {
         <p className="text-[var(--text-secondary)] text-sm mb-4">{item.name}</p>
 
         <div className="flex gap-2 mb-4 justify-center">
-          {[1,2,3,4,5].map(s => (
+          {[1, 2, 3, 4, 5].map(s => (
             <button key={s} onClick={() => setScore(s)}>
               <Star size={32} className={s <= score ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'} />
             </button>
@@ -98,7 +98,7 @@ export default function OrdersPage() {
 
         {loading ? (
           <div className="space-y-4">
-            {[1,2,3].map(i => (
+            {[1, 2, 3].map(i => (
               <div key={i} className="glass rounded-2xl p-6 animate-pulse">
                 <div className="h-4 bg-white/5 rounded w-1/3 mb-4" />
                 <div className="h-16 bg-white/5 rounded" />

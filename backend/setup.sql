@@ -81,14 +81,29 @@ ALTER TABLE cart ENABLE ROW LEVEL SECURITY;
 ALTER TABLE product_ratings ENABLE ROW LEVEL SECURITY;
 
 -- Simple Policies (Allow Read for all, Write for authenticated)
+DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON profiles;
 CREATE POLICY "Public profiles are viewable by everyone" ON profiles FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Users can insert own profile" ON profiles;
+CREATE POLICY "Users can insert own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
 CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Products are viewable by everyone" ON products;
 CREATE POLICY "Products are viewable by everyone" ON products FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Sellers can manage own products" ON products;
 CREATE POLICY "Sellers can manage own products" ON products FOR ALL USING (auth.uid() = seller_id);
 
+DROP POLICY IF EXISTS "Users can view own orders" ON orders;
 CREATE POLICY "Users can view own orders" ON orders FOR SELECT USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can create own orders" ON orders;
 CREATE POLICY "Users can create own orders" ON orders FOR INSERT WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can view own cart" ON cart;
 CREATE POLICY "Users can view own cart" ON cart FOR SELECT USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can manage own cart" ON cart;
 CREATE POLICY "Users can manage own cart" ON cart FOR ALL USING (auth.uid() = user_id);

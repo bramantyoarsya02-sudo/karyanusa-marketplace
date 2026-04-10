@@ -37,7 +37,8 @@ export default function CreateProductPage() {
       toast.success('Produk berhasil dibuat!');
       navigate('/home');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Gagal membuat produk');
+      console.error(err);
+      toast.error(err.response?.data?.error || err.response?.data?.message || 'Gagal membuat produk');
     } finally {
       setLoading(false);
     }
@@ -91,7 +92,7 @@ export default function CreateProductPage() {
 
           {/* Product Info */}
           <div className="glass rounded-2xl p-6 space-y-4">
-            <h2 className="font-semibold text-white flex items-center gap-2">
+            <h2 className="font-semibold text-[var(--text-primary)] flex items-center gap-2">
               <Package size={18} className="text-purple-400" /> Informasi Produk
             </h2>
 
@@ -104,16 +105,16 @@ export default function CreateProductPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Harga (IDR) *</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-2">Harga (IDR) *</label>
                 <input type="number" placeholder="0" min="0"
                   value={form.price} onChange={e => setForm({ ...form, price: e.target.value })}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors" />
+                  className="w-full bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl px-4 py-3 text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors" />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Stok</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-2">Stok</label>
                 <input type="number" placeholder="99" min="1"
                   value={form.stock} onChange={e => setForm({ ...form, stock: e.target.value })}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors" />
+                  className="w-full bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl px-4 py-3 text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors" />
               </div>
             </div>
 

@@ -1,14 +1,20 @@
-import { supabase } from '../config/supabaseClient.js';
+import { getAuthClient } from '../config/supabaseClient.js';
+
+// Helper to fetch full cart with products - now accepts scoped client
+const getFullCart = async (supabase, userId) => {
+  const { data, error } = await supabase
+    .from('cart')
+    .select('*, products(*)')
+    .eq('user_id', userId);
+  if (error) throw error;
+  return data || [];
+};
 
 // 1. Get user cart
 export const getCart = async (req, res) => {
   try {
-    const { data, error } = await supabase
-      .from('cart')
-      .select('*, products(*)')
-      .eq('user_id', req.user.id);
-
-    if (error) throw error;
+    const supabase = getAuthClient(req);
+    const data = await getFullCart(supabase, req.user.id);
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -19,6 +25,7 @@ export const getCart = async (req, res) => {
 export const addCartItem = async (req, res) => {
   try {
     const { product_id, quantity } = req.body;
+    const supabase = getAuthClient(req);
 
     // Check if item already exists
     const { data: existing, error: checkError } = await supabase
@@ -32,26 +39,26 @@ export const addCartItem = async (req, res) => {
 
     if (existing) {
       // Update quantity
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('cart')
         .update({ quantity: existing.quantity + Number(quantity) })
-        .eq('id', existing.id)
-        .select();
+        .eq('id', existing.id);
       if (error) throw error;
-      res.json(data[0]);
     } else {
       // Insert new
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('cart')
         .insert([{
           user_id: req.user.id,
           product_id,
           quantity: Number(quantity)
-        }])
-        .select();
+        }]);
       if (error) throw error;
-      res.status(201).json(data[0]);
     }
+
+    // Always return full updated cart using the scoped client
+    const fullCart = await getFullCart(supabase, req.user.id);
+    res.status(existing ? 200 : 201).json(fullCart);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -62,16 +69,19 @@ export const updateCartItem = async (req, res) => {
   try {
     const { id } = req.params;
     const { quantity } = req.body;
+    const supabase = getAuthClient(req);
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('cart')
       .update({ quantity: Number(quantity) })
       .eq('id', id)
-      .eq('user_id', req.user.id)
-      .select();
+      .eq('user_id', req.user.id);
 
     if (error) throw error;
-    res.json(data[0]);
+
+    // Return full updated cart
+    const fullCart = await getFullCart(supabase, req.user.id);
+    res.json(fullCart);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -81,6 +91,8 @@ export const updateCartItem = async (req, res) => {
 export const removeCartItem = async (req, res) => {
   try {
     const { id } = req.params;
+    const supabase = getAuthClient(req);
+
     const { error } = await supabase
       .from('cart')
       .delete()
@@ -88,8 +100,12 @@ export const removeCartItem = async (req, res) => {
       .eq('user_id', req.user.id);
 
     if (error) throw error;
-    res.json({ message: "Produk berhasil dihapus dari keranjang" });
+
+    // Return full updated cart
+    const fullCart = await getFullCart(supabase, req.user.id);
+    res.json(fullCart);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+

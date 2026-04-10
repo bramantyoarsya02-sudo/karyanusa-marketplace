@@ -10,6 +10,7 @@ import HomePage from './pages/HomePage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrdersPage from './pages/OrdersPage';
 import CreateProductPage from './pages/CreateProductPage';
+import ProfilePage from './pages/ProfilePage';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -37,6 +38,7 @@ function AppRoutes() {
       <Route path="/checkout" element={<PrivateRoute><CheckoutPage /></PrivateRoute>} />
       <Route path="/orders" element={<PrivateRoute><OrdersPage /></PrivateRoute>} />
       <Route path="/create-product" element={<PrivateRoute><CreateProductPage /></PrivateRoute>} />
+      <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

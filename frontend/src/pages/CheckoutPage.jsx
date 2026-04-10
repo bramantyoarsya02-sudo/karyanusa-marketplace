@@ -100,9 +100,9 @@ export default function CheckoutPage() {
                       onChange={e => setForm({ ...form, paymentMethod: e.target.value })}
                       className="hidden" />
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
-                      form.paymentMethod === id ? 'btn-primary' : 'bg-[var(--card-hover-bg)]'
+                      form.paymentMethod === id ? 'btn-primary' : 'bg-[var(--card-hover-bg)] text-[var(--text-secondary)]'
                     }`}>
-                      <Icon size={20} className="text-white" />
+                      <Icon size={20} className={form.paymentMethod === id ? "text-white" : "text-current"} />
                     </div>
                     <div>
                       <p className="font-medium text-[var(--text-primary)]">{label}</p>

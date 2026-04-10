@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import api from '../api/axios';
+import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import ProductCard from '../components/ProductCard';
 import ProductModal from '../components/ProductModal';
 import CartDrawer from '../components/CartDrawer';
+import toast from 'react-hot-toast';
 
 const CATEGORIES = ['all', 'Electronics', 'Fashion', 'Home', 'Books', 'Sports', 'Kitchen', 'Other'];
 
 export default function HomePage() {
+  const { user } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [wishlistIds, setWishlistIds] = useState([]);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const [sort, setSort] = useState('');
@@ -26,6 +30,11 @@ export default function HomePage() {
       if (sort) params.sort = sort;
       const { data } = await api.get('/products', { params });
       setProducts(data);
+
+      if (user && user.role === 'buyer') {
+        const { data: wishData } = await api.get('/wishlist');
+        setWishlistIds(wishData.map(item => item.product_id));
+      }
     } catch { setProducts([]); }
     finally { setLoading(false); }
   };
@@ -37,11 +46,27 @@ export default function HomePage() {
     fetchProducts();
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/products/${id}`);
+      setProducts(products.filter(p => p.id !== id));
+      toast.success('Produk berhasil dihapus!');
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Gagal menghapus produk');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[var(--bg-color)] transition-colors duration-300">
       <Navbar onCartOpen={() => setCartOpen(true)} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
-      {selected && <ProductModal product={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <ProductModal 
+          product={selected} 
+          onClose={() => setSelected(null)} 
+          initialWishlisted={wishlistIds.includes(selected.id)}
+        />
+      )}
 
       <div className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         {/* Header */}
@@ -115,7 +140,13 @@ export default function HomePage() {
             <p className="text-[var(--text-secondary)] opacity-60 text-sm mb-4">{products.length} produk ditemukan</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map(p => (
-                <ProductCard key={p.id} product={p} onClick={() => setSelected(p)} />
+                <ProductCard 
+                  key={p.id} 
+                  product={p} 
+                  onClick={() => setSelected(p)} 
+                  onDelete={handleDelete}
+                  initialWishlisted={wishlistIds.includes(p.id)}
+                />
               ))}
             </div>
           </>

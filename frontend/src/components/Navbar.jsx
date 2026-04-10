@@ -45,10 +45,12 @@ export default function Navbar({ onCartOpen }) {
             <Package size={20} className="text-[var(--text-secondary)]" />
           </Link>
 
-          {/* Create Product */}
-          <Link to="/create-product" className="p-2 glass rounded-xl hover:bg-white/10 transition-colors hidden sm:block">
-            <PlusSquare size={20} className="text-[var(--text-secondary)]" />
-          </Link>
+          {/* Create Product - Only for Sellers */}
+          {user?.role === 'seller' && (
+            <Link to="/create-product" className="p-2 glass rounded-xl hover:bg-white/10 transition-colors hidden sm:block">
+              <PlusSquare size={20} className="text-[var(--text-secondary)]" />
+            </Link>
+          )}
 
           {/* Mobile menu items */}
           <Link to="/orders" className="p-2 glass rounded-xl hover:bg-white/10 transition-colors sm:hidden">
@@ -56,18 +58,20 @@ export default function Navbar({ onCartOpen }) {
           </Link>
 
           {/* User */}
-          <div className="flex items-center gap-3 pl-3 border-l border-[var(--border-color)]">
-            <div className="hidden md:flex flex-col items-end">
-              <span className="text-sm font-bold text-[var(--text-primary)] leading-tight">{user?.full_name || 'Member'}</span>
-              <span className="text-[10px] text-[var(--text-secondary)] opacity-70 leading-tight">{user?.email}</span>
-            </div>
-            {user?.avatar ? (
-              <img src={user.avatar} alt="Avatar" className="w-9 h-9 rounded-full object-cover border border-purple-500/30" />
-            ) : (
-              <div className="w-9 h-9 btn-primary rounded-full flex items-center justify-center">
-                <User size={18} className="text-white" />
+          <div className="flex items-center gap-2 pl-3 border-l border-[var(--border-color)]">
+            <Link to="/profile" className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer">
+              <div className="hidden md:flex flex-col items-end">
+                <span className="text-sm font-bold text-[var(--text-primary)] leading-tight">{user?.full_name || 'Member'}</span>
+                <span className="text-[10px] text-[var(--text-secondary)] opacity-70 leading-tight">{user?.email}</span>
               </div>
-            )}
+              {user?.avatar ? (
+                <img src={user.avatar} alt="Avatar" className="w-9 h-9 rounded-full object-cover border border-purple-500/30" />
+              ) : (
+                <div className="w-9 h-9 btn-primary rounded-full flex items-center justify-center">
+                  <User size={18} className="text-white" />
+                </div>
+              )}
+            </Link>
             <button onClick={handleLogout} className="p-1.5 text-red-500/70 hover:text-red-500 transition-colors ml-1">
               <LogOut size={20} />
             </button>

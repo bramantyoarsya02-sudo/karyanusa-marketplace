@@ -11,11 +11,13 @@ export const AuthProvider = ({ children }) => {
   // Sync Supabase Auth state with our Context
   useEffect(() => {
     const syncAuth = async () => {
+      // Check if we are in an auth redirect flow (contains access_token in hash)
+      const hasHash = window.location.hash.includes('access_token=');
+      
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session) {
         localStorage.setItem('token', session.access_token);
-        // Verify/Get Profile from backend or Supabase
         try {
           const { data } = await api.get('/auth/me', {
             headers: { Authorization: `Bearer ${session.access_token}` }
@@ -25,11 +27,20 @@ export const AuthProvider = ({ children }) => {
         } catch (err) {
           console.error("Failed to sync profile:", err);
         }
+        setLoading(false);
+      } else if (hasHash) {
+        // We have a hash but no session yet, Supabase is likely processing it.
+        // We stay in loading state and let onAuthStateChange handle the rest.
+        console.log("Auth hash detected, waiting for session...");
+        // After 5 seconds, if still no session, stop loading
+        setTimeout(() => setLoading(false), 5000);
+      } else {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     syncAuth();
+
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth Event:", event);
@@ -39,9 +50,22 @@ export const AuthProvider = ({ children }) => {
           const { data } = await api.get('/auth/me', {
             headers: { Authorization: `Bearer ${session.access_token}` }
           });
-          console.log("Synced User Data from API:", data.user);
-          setUser(data.user);
-          localStorage.setItem('user', JSON.stringify(data.user));
+          
+          let currentUser = data.user;
+          const pendingRole = localStorage.getItem('pending_role');
+
+          if (pendingRole && currentUser.role !== pendingRole) {
+            console.log("Updating pending role to:", pendingRole);
+            const { data: updatedData } = await api.put('/auth/profile', 
+              { role: pendingRole },
+              { headers: { Authorization: `Bearer ${session.access_token}` } }
+            );
+            currentUser = updatedData.user;
+            localStorage.removeItem('pending_role');
+          }
+
+          setUser(currentUser);
+          localStorage.setItem('user', JSON.stringify(currentUser));
         } catch (err) {
           console.error("Failed to sync profile:", err);
         }
@@ -55,16 +79,23 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email, password) => {
-    const { data } = await api.post('/auth/login', { email, password });
+  const login = async (email, password, role = null) => {
+    const { data } = await api.post('/auth/login', { email, password, role });
+    
+    // Simpan token dan user lengkap (yang sudah berisi role dari profil)
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
+    
     setUser(data.user);
     return data;
   };
 
-  const loginWithGoogle = async () => {
+
+  const loginWithGoogle = async (role = null) => {
     try {
+      if (role) {
+        localStorage.setItem('pending_role', role);
+      }
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -78,11 +109,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password) => {
-    const { data } = await api.post('/auth/register', { name, email, password });
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-    setUser(data.user);
+  const register = async (userData) => {
+    const { data } = await api.post('/auth/register', userData);
+    if (data.token && !data.needsConfirmation) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
+    }
     return data;
   };
 
@@ -93,8 +126,13 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateUserData = (newData) => {
+    setUser(newData);
+    localStorage.setItem('user', JSON.stringify(newData));
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, loginWithGoogle, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, loginWithGoogle, register, logout, updateUserData, loading }}>
       {children}
     </AuthContext.Provider>
   );

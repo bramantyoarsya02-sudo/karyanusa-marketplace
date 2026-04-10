@@ -1,24 +1,32 @@
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Shield, Zap, Globe, ArrowRight, Lock, Truck, HeadphonesIcon, Tag } from 'lucide-react';
+import { ShoppingBag, Shield, Zap, Globe, ArrowRight, Lock, Truck, HeadphonesIcon, Tag, Star, Users, BadgeCheck, TrendingUp } from 'lucide-react';
 import logo from '../assets/logo.png';
-import ayoBelanja from '../assets/ayobelanja.jpg';
 import keluargaBelanja from '../assets/keluarga_belanja.jpg';
 import koleksiLengkap from '../assets/koleksi_lengkap.jpg';
 import web3Showcase from '../assets/web3promosi.jpg';
 import ThemeToggle from '../components/ThemeToggle';
 
 const features = [
-  { Icon: Shield, title: 'Transaksi Aman', desc: 'Setiap transaksi dilindungi enkripsi dan sistem verifikasi berlapis untuk keamanan Anda.' },
-  { Icon: Truck, title: 'Pengiriman Cepat', desc: 'Bekerja sama dengan berbagai jasa pengiriman terpercaya untuk memastikan produk sampai tepat waktu.' },
-  { Icon: HeadphonesIcon, title: 'Dukungan 24/7', desc: 'Tim customer service kami siap membantu Anda kapan saja melalui chat, email, maupun telepon.' },
-  { Icon: Tag, title: 'Harga Terbaik', desc: 'Temukan produk berkualitas dengan harga kompetitif langsung dari penjual terpercaya.' },
+  { Icon: Shield, title: 'Transaksi Aman', desc: 'Setiap transaksi dilindungi enkripsi tingkat tinggi dan sistem verifikasi berlapis untuk keamanan penuh.' },
+  { Icon: Truck, title: 'Pengiriman Cepat', desc: 'Bekerja sama dengan berbagai jasa pengiriman terpercaya agar produk sampai tepat waktu ke tangan Anda.' },
+  { Icon: HeadphonesIcon, title: 'Dukungan 24/7', desc: 'Tim customer service kami siap membantu kapan saja melalui chat, email, maupun telepon.' },
+  { Icon: Tag, title: 'Harga Terbaik', desc: 'Temukan produk berkualitas dengan harga kompetitif langsung dari penjual-penjual terpercaya.' },
 ];
 
 const highlights = [
   { Icon: Lock, title: 'Akun Terverifikasi', desc: 'Setiap penjual melalui proses verifikasi identitas sebelum bisa berjualan di platform kami.' },
   { Icon: ShoppingBag, title: 'Produk Beragam', desc: 'Dari elektronik, fashion, peralatan rumah, hingga buku — semua tersedia dalam satu tempat.' },
-  { Icon: Globe, title: 'Jangkauan Luas', desc: 'Platform dapat diakses dari seluruh Indonesia dengan tampilan yang responsif di semua perangkat.' },
-  { Icon: Zap, title: 'Checkout Mudah', desc: 'Proses pembelian yang simpel dan cepat, dari pilih produk hingga konfirmasi pesanan.' },
+  { Icon: Globe, title: 'Jangkauan Luas', desc: 'Platform dapat diakses dari seluruh Indonesia dengan tampilan responsif di semua perangkat.' },
+  { Icon: Zap, title: 'Checkout Mudah', desc: 'Proses pembelian simpel dan cepat, dari pilih produk hingga konfirmasi pesanan hanya dalam hitungan detik.' },
+];
+
+const web3Benefits = [
+  { Icon: BadgeCheck, title: 'Teknologi Blockchain', desc: 'Mencatat setiap transaksi secara permanen di buku besar digital (distributed ledger), menjamin keaslian dan mencegah manipulasi data oleh pihak mana pun.' },
+  { Icon: Lock, title: 'Kontrak Pintar (Smart Contracts)', desc: 'Keamanan transaksi dijamin oleh kode program otomatis yang memastikan pembayaran hanya dilepaskan jika syarat pengiriman telah terpenuhi secara adil.' },
+  { Icon: Users, title: 'Kepemilikan Digital Penuh', desc: 'Di era Web3, Anda memiliki kontrol penuh atas aset dan identitas digital Anda tanpa perlu bergantung sepenuhnya pada otoritas pusat yang terpusat.' },
+  { Icon: TrendingUp, title: 'Ekonomi Tanpa Perantara', desc: 'Menghubungkan pembeli dan penjual secara langsung melalui jaringan blockchain, mengurangi biaya admin dan mempercepat proses likuiditas keuangan.' },
+  { Icon: Globe, title: 'Transparansi Global', desc: 'Seluruh riwayat transaksi dapat diverifikasi secara publik di jaringan blockchain, menciptakan standar kepercayaan baru yang belum pernah ada sebelumnya.' },
+  { Icon: Shield, title: 'Kriptografi Mutakhir', desc: 'Melindungi privasi dan keamanan akun Anda dengan enkripsi kunci publik-privat, memberikan proteksi maksimal terhadap serangan siber tradisional.' },
 ];
 
 const categories = ['Electronics', 'Fashion', 'Home', 'Books', 'Sports', 'Kitchen'];
@@ -46,7 +54,7 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero — teks kiri, gambar kanan */}
+      {/* Hero — teks kiri, LOGO kanan */}
       <section className="pt-28 pb-16 px-4 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-purple-600/10 dark:bg-purple-600/20 rounded-full blur-3xl transition-colors" />
@@ -62,7 +70,7 @@ export default function LandingPage() {
                 Belanja <span className="gradient-text">Lebih Mudah</span> dan Aman
               </h1>
               <p className="text-lg text-[var(--text-secondary)] mb-8 max-w-lg">
-                Temukan ribuan produk pilihan dari penjual terpercaya. Belanja nyaman, aman, dan langsung dari rumah Anda.
+                Temukan ribuan produk pilihan dari penjual terpercaya. Belanja nyaman, aman, dan langsung dari rumah Anda kapan saja dan di mana saja.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/register" className="btn-primary px-8 py-4 rounded-xl text-white font-semibold flex items-center justify-center gap-2 text-lg">
@@ -73,23 +81,20 @@ export default function LandingPage() {
                 </Link>
               </div>
             </div>
-            {/* Hero image */}
-            <div className="relative">
-              <div className="rounded-3xl overflow-hidden shadow-2xl shadow-purple-900/40 aspect-4/3">
+            {/* Logo sebagai hero visual */}
+            <div className="relative flex items-center justify-center">
+              <div className="absolute w-80 h-80 bg-purple-600/20 rounded-full blur-3xl" />
+              <div className="relative z-10 flex flex-col items-center glass rounded-3xl p-12 shadow-2xl shadow-purple-900/40 border border-white/10">
                 <img
-                  src={ayoBelanja}
-                  alt="Ayo Belanja di KaryaNusa"
-                  className="w-full h-full object-cover"
+                  src={logo}
+                  alt="KaryaNusa Logo"
+                  className="w-40 h-40 object-contain drop-shadow-2xl mb-6"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-[#0a0a1a]/50 to-transparent" />
-              </div>
-              <div className="absolute bottom-5 left-5 glass rounded-2xl px-4 py-3 border border-white/20">
-                <p className="text-white font-semibold text-sm">Ribuan Produk Tersedia</p>
-                <p className="text-purple-200 text-xs">Dikirim ke seluruh Indonesia</p>
-              </div>
-              <div className="absolute -top-3 -right-3 glass rounded-2xl px-4 py-3 shadow-lg border border-white/20">
-                <p className="text-xs text-white opacity-70">Penjual Aktif</p>
-                <p className="text-white font-bold text-xl">10K+</p>
+                <h2 className="text-3xl font-bold gradient-text mb-2">KaryaNusa</h2>
+                <p className="text-[var(--text-secondary)] text-center text-sm">Marketplace Digital Indonesia</p>
+                <div className="flex gap-6 mt-6">
+                  <p className="text-[var(--text-secondary)] text-center text-xs italic">Aman • Transparan • Terdesentralisasi</p>
+                </div>
               </div>
             </div>
           </div>
@@ -109,7 +114,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Showcase — 3 gambar besar berdampingan */}
+      {/* Showcase — 3 poster: Keluarga (besar), Koleksi & Web3 (kecil) */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10">
@@ -117,45 +122,45 @@ export default function LandingPage() {
             <p className="text-[var(--text-secondary)] max-w-lg mx-auto">Dari kebutuhan sehari-hari hingga produk pilihan, semua ada di KaryaNusa.</p>
           </div>
           {/* Layout: 1 besar kiri + 2 kecil kanan */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-auto lg:h-[480px]">
-            {/* Gambar besar */}
-            <Link to="/register" className="group relative rounded-3xl overflow-hidden lg:col-span-2 shadow-xl">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:h-[480px]">
+            {/* Gambar besar — Keluarga */}
+            <Link to="/register" className="group relative rounded-3xl overflow-hidden lg:col-span-2 shadow-xl flex items-center justify-center bg-black/5 dark:bg-white/5">
               <img
                 src={keluargaBelanja}
                 alt="Belanja untuk Keluarga"
-                className="w-full h-64 lg:h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-64 lg:h-full object-contain group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
-              <div className="absolute bottom-6 left-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+              <div className="absolute bottom-6 left-6 z-10">
                 <span className="text-xs text-purple-200 uppercase tracking-widest font-bold">Untuk Keluarga</span>
                 <p className="text-white font-bold text-2xl mt-1">Belanja Bersama</p>
                 <p className="text-white opacity-80 text-sm mt-1">Produk lengkap untuk semua anggota keluarga</p>
               </div>
             </Link>
             {/* 2 gambar kecil */}
-            <div className="flex flex-col gap-4">
-              <Link to="/register" className="group relative rounded-3xl overflow-hidden flex-1 shadow-xl">
+            <div className="flex flex-col gap-4 h-full">
+              <Link to="/register" className="group relative rounded-3xl overflow-hidden flex-1 shadow-xl flex items-center justify-center bg-black/5 dark:bg-white/5">
                 <img
                   src={koleksiLengkap}
                   alt="Koleksi Lengkap"
-                  className="w-full h-48 lg:h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-48 lg:h-full object-contain group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
-                <div className="absolute bottom-4 left-4">
-                  <span className="text-xs text-cyan-300 uppercase tracking-widest">Koleksi</span>
-                  <p className="text-[var(--text-primary)] font-bold text-lg mt-0.5">Ribuan Pilihan</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-4 left-4 z-10">
+                  <span className="text-xs text-cyan-300 uppercase tracking-widest">Koleksi Lengkap</span>
+                  <p className="text-white font-bold text-lg mt-0.5">Ribuan Pilihan</p>
                 </div>
               </Link>
-              <Link to="/register" className="group relative rounded-3xl overflow-hidden flex-1 shadow-xl">
+              <Link to="/register" className="group relative rounded-3xl overflow-hidden flex-1 shadow-xl flex items-center justify-center bg-black/5 dark:bg-white/5">
                 <img
                   src={web3Showcase}
-                  alt="KaryaNusa Showcase"
-                  className="w-full h-48 lg:h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  alt="KaryaNusa Promosi"
+                  className="w-full h-48 lg:h-full object-contain group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
-                <div className="absolute bottom-4 left-4">
-                  <span className="text-xs text-purple-200 uppercase tracking-widest font-bold">Platform</span>
-                  <p className="text-white font-bold text-lg mt-0.5">KaryaNusa</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-4 left-4 z-10">
+                  <span className="text-xs text-purple-200 uppercase tracking-widest font-bold">Promo Spesial</span>
+                  <p className="text-white font-bold text-lg mt-0.5">Penawaran Terbaik</p>
                 </div>
               </Link>
             </div>
@@ -168,13 +173,13 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-3">Mengapa <span className="gradient-text">KaryaNusa?</span></h2>
-            <p className="text-[var(--text-secondary)] max-w-xl mx-auto">Kami menghadirkan pengalaman belanja online yang mudah, aman, dan menyenangkan.</p>
+            <p className="text-[var(--text-secondary)] max-w-xl mx-auto">Kami menghadirkan pengalaman belanja online yang mudah, aman, dan menyenangkan untuk semua.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {features.map((item) => (
               <div key={item.title} className="glass rounded-2xl p-6 card-hover">
                 <div className="w-12 h-12 btn-primary rounded-xl flex items-center justify-center mb-4">
-                  <item.Icon size={22} className="text-[var(--text-primary)]" />
+                  <item.Icon size={22} className="text-white" />
                 </div>
                 <h3 className="font-semibold text-[var(--text-primary)] mb-2">{item.title}</h3>
                 <p className="text-[var(--text-secondary)] text-sm leading-relaxed">{item.desc}</p>
@@ -184,11 +189,37 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Keluarga — gambar kiri, teks kanan */}
+      {/* Keunggulan Marketplace Digital */}
+      <section className="py-16 px-4 bg-gradient-to-br from-purple-900/10 to-cyan-900/10">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-purple-400 text-sm font-medium uppercase tracking-widest mb-3">Revolusi Web3 & Blockchain</p>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              Masa Depan Marketplace: <span className="gradient-text">Web3 & Blockchain</span>
+            </h2>
+            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
+              KaryaNusa bukan sekadar marketplace biasa. Kami memanfaatkan kekuatan teknologi <b>Blockchain</b> dan <b>Web3</b> untuk memberikan keamanan yang tak tertandingi, transparansi penuh pada setiap transaksi, dan kedaulatan data bagi setiap pengguna. Selamat datang di era ekonomi digital yang lebih adil dan terpercaya.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {web3Benefits.map((item) => (
+              <div key={item.title} className="glass rounded-2xl p-6 card-hover border border-purple-500/20">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-cyan-600 rounded-xl flex items-center justify-center mb-4">
+                  <item.Icon size={22} className="text-white" />
+                </div>
+                <h3 className="font-semibold text-[var(--text-primary)] mb-2">{item.title}</h3>
+                <p className="text-[var(--text-secondary)] text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Belanja Bersama Keluarga */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 items-center">
-          <div className="rounded-3xl overflow-hidden shadow-xl shadow-purple-900/20 aspect-4/3">
-            <img src={keluargaBelanja} alt="Keluarga Belanja" className="w-full h-full object-cover" />
+          <div className="rounded-3xl overflow-hidden shadow-xl shadow-purple-900/20 bg-black/5 dark:bg-white/5 flex items-center justify-center p-2">
+            <img src={keluargaBelanja} alt="Keluarga Belanja" className="w-full h-auto object-contain rounded-2xl" />
           </div>
           <div>
             <p className="text-purple-400 text-sm font-medium uppercase tracking-widest mb-3">Untuk Semua</p>
@@ -196,7 +227,7 @@ export default function LandingPage() {
               Belanja Bersama <span className="gradient-text">Keluarga</span>
             </h2>
             <p className="text-[var(--text-secondary)] leading-relaxed mb-6">
-              KaryaNusa hadir untuk memenuhi kebutuhan seluruh anggota keluarga. Dari produk anak-anak, kebutuhan dapur, hingga elektronik rumah tangga — semua tersedia dengan harga terjangkau.
+              KaryaNusa hadir untuk memenuhi kebutuhan seluruh anggota keluarga. Dari produk anak-anak, kebutuhan dapur, hingga elektronik rumah tangga — semua tersedia dengan harga terjangkau dan kualitas terjamin.
             </p>
             <div className="flex flex-col gap-3 mb-8">
               {['Produk aman dan terverifikasi', 'Pengiriman ke seluruh Indonesia', 'Garansi kepuasan pelanggan'].map(item => (
@@ -208,14 +239,14 @@ export default function LandingPage() {
                 </div>
               ))}
             </div>
-            <Link to="/register" className="btn-primary px-7 py-3 rounded-xl text-[var(--text-primary)] font-semibold inline-flex items-center gap-2">
+            <Link to="/register" className="btn-primary px-7 py-3 rounded-xl text-white font-semibold inline-flex items-center gap-2">
               Mulai Belanja <ArrowRight size={18} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Koleksi — teks kiri, gambar kanan */}
+      {/* Koleksi Lengkap */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 items-center">
           <div className="order-2 lg:order-1">
@@ -224,14 +255,14 @@ export default function LandingPage() {
               Ribuan Pilihan <span className="gradient-text">Produk</span>
             </h2>
             <p className="text-[var(--text-secondary)] leading-relaxed mb-6">
-              Temukan koleksi produk terlengkap dari berbagai kategori. Penjual terpercaya kami menghadirkan produk berkualitas dengan harga yang bersaing.
+              Temukan koleksi produk terlengkap dari berbagai kategori. Penjual terpercaya kami menghadirkan produk berkualitas dengan harga yang bersaing dan ulasan jujur dari pembeli nyata.
             </p>
-            <Link to="/register" className="btn-primary px-7 py-3 rounded-xl text-[var(--text-primary)] font-semibold inline-flex items-center gap-2">
+            <Link to="/register" className="btn-primary px-7 py-3 rounded-xl text-white font-semibold inline-flex items-center gap-2">
               Jelajahi Koleksi <ArrowRight size={18} />
             </Link>
           </div>
-          <div className="rounded-3xl overflow-hidden shadow-xl shadow-cyan-900/20 aspect-4/3 order-1 lg:order-2">
-            <img src={koleksiLengkap} alt="Koleksi Lengkap" className="w-full h-full object-cover" />
+          <div className="rounded-3xl overflow-hidden shadow-xl shadow-cyan-900/20 order-1 lg:order-2 bg-black/5 dark:bg-white/5 flex items-center justify-center p-2">
+            <img src={koleksiLengkap} alt="Koleksi Lengkap" className="w-full h-auto object-contain rounded-2xl" />
           </div>
         </div>
       </section>
@@ -255,11 +286,11 @@ export default function LandingPage() {
       {/* CTA */}
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto text-center glass rounded-3xl p-12 relative overflow-hidden">
-          <div className="absolute inset-0 bg-linear-to-br from-purple-600/20 to-cyan-600/20 rounded-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-cyan-600/20 rounded-3xl" />
           <div className="relative z-10">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">Siap Mulai Belanja?</h2>
-            <p className="text-[var(--text-secondary)] mb-8">Buat akun gratis sekarang dan nikmati kemudahan berbelanja di KaryaNusa.</p>
-            <Link to="/register" className="btn-primary px-10 py-4 rounded-xl text-[var(--text-primary)] font-semibold inline-flex items-center gap-2 text-lg">
+            <p className="text-[var(--text-secondary)] mb-8">Buat akun gratis sekarang dan nikmati kemudahan berbelanja di KaryaNusa — marketplace digital Indonesia terpercaya.</p>
+            <Link to="/register" className="btn-primary px-10 py-4 rounded-xl text-white font-semibold inline-flex items-center gap-2 text-lg">
               Daftar Gratis <ArrowRight size={20} />
             </Link>
           </div>
@@ -279,4 +310,3 @@ export default function LandingPage() {
     </div>
   );
 }
-

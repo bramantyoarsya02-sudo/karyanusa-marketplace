@@ -1,4 +1,4 @@
-import { supabase } from '../config/supabaseClient.js';
+import { supabase, getAuthClient } from '../config/supabaseClient.js';
 
 // 1. GET all products with Filtering
 export const getProducts = async (req, res) => {
@@ -61,13 +61,15 @@ export const createProduct = async (req, res) => {
 
     let imageUrl = 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400';
 
+    const authSupabase = getAuthClient(req);
+
     // Handle Upload to Supabase Storage
     if (req.file) {
       const fileExt = req.file.originalname.split('.').pop();
       const fileName = `${Date.now()}-${Math.floor(Math.random() * 1000)}.${fileExt}`;
       const filePath = `${req.user.id}/${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
+      const { error: uploadError } = await authSupabase.storage
         .from('products')
         .upload(filePath, req.file.buffer, {
           contentType: req.file.mimetype,
@@ -76,7 +78,7 @@ export const createProduct = async (req, res) => {
 
       if (uploadError) throw new Error(`Gagal mengupload gambar: ${uploadError.message}`);
 
-      const { data: { publicUrl } } = supabase.storage
+      const { data: { publicUrl } } = authSupabase.storage
         .from('products')
         .getPublicUrl(filePath);
       
@@ -86,7 +88,7 @@ export const createProduct = async (req, res) => {
     // Get seller profile
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('full_name, shop_name')
+      .select('full_name, shop_name, role')
       .eq('id', req.user.id)
       .single();
 
@@ -94,7 +96,11 @@ export const createProduct = async (req, res) => {
       console.error("Profile error:", profileError);
     }
 
-    const { data, error } = await supabase
+    if (profile?.role !== 'seller') {
+      return res.status(403).json({ error: "Hanya akun Penjual yang diizinkan menambah produk. Pastikan profil Anda sudah diubah menjadi Penjual." });
+    }
+
+    const { data, error } = await authSupabase
       .from('products')
       .insert([{ 
         seller_id: req.user.id,
@@ -108,7 +114,11 @@ export const createProduct = async (req, res) => {
       }])
       .select();
 
-    if (error) throw error;
+    if (error) {
+      console.error("Supabase Product Insert Error:", error);
+      throw error;
+    }
+    
     res.status(201).json({ message: "Produk berhasil dibuat", data: data[0] });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -128,12 +138,14 @@ export const updateProduct = async (req, res) => {
     if (category) updateData.category = category;
     if (stock !== undefined) updateData.stock = Number(stock);
 
+    const authSupabase = getAuthClient(req);
+
     if (req.file) {
       const fileExt = req.file.originalname.split('.').pop();
       const fileName = `${Date.now()}-${Math.floor(Math.random() * 1000)}.${fileExt}`;
       const filePath = `${req.user.id}/${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
+      const { error: uploadError } = await authSupabase.storage
         .from('products')
         .upload(filePath, req.file.buffer, {
           contentType: req.file.mimetype,
@@ -142,14 +154,14 @@ export const updateProduct = async (req, res) => {
 
       if (uploadError) throw new Error(`Gagal mengupload gambar baru: ${uploadError.message}`);
 
-      const { data: { publicUrl } } = supabase.storage
+      const { data: { publicUrl } } = authSupabase.storage
         .from('products')
         .getPublicUrl(filePath);
       
       updateData.image = publicUrl;
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await authSupabase
       .from('products')
       .update(updateData)
       .eq('id', id)
@@ -171,13 +183,21 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { error } = await supabase
+    const authSupabase = getAuthClient(req);
+    
+    // Gunakan select untuk memastikan ada produk yang terpengaruh
+    const { data, error } = await authSupabase
       .from('products')
       .delete()
       .eq('id', id)
-      .eq('seller_id', req.user.id);
+      .eq('seller_id', req.user.id)
+      .select();
 
     if (error) throw error;
+    if (data.length === 0) {
+      return res.status(403).json({ error: "Produk tidak ditemukan atau bukan milik Anda" });
+    }
+    
     res.json({ message: "Produk berhasil dihapus" });
   } catch (error) {
     res.status(500).json({ error: error.message });

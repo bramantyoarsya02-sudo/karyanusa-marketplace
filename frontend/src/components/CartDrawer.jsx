@@ -35,24 +35,24 @@ export default function CartDrawer({ open, onClose }) {
             </div>
           ) : (
             cart.map(item => (
-              <div key={item.productId} className="flex gap-3 p-3 bg-[var(--card-bg)] rounded-xl border border-[var(--border-color)]">
-                <img src={item.image} alt={item.name}
+              <div key={item.id} className="flex gap-3 p-3 bg-[var(--card-bg)] rounded-xl border border-[var(--border-color)]">
+                <img src={item.products?.image} alt={item.products?.name}
                   className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
                   onError={e => { e.target.src = 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400'; }} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[var(--text-primary)] line-clamp-1">{item.name}</p>
-                  <p className="text-purple-400 text-sm font-semibold">{formatPrice(item.price)}</p>
+                  <p className="text-sm font-medium text-[var(--text-primary)] line-clamp-1">{item.products?.name}</p>
+                  <p className="text-purple-400 text-sm font-semibold">{formatPrice(item.products?.price || 0)}</p>
                   <div className="flex items-center gap-2 mt-2">
-                    <button onClick={() => updateCart(item.productId, item.quantity - 1)}
+                    <button onClick={() => updateCart(item.id, item.quantity - 1)}
                       className="w-6 h-6 bg-[var(--card-hover-bg)] rounded-md flex items-center justify-center hover:bg-purple-500/20 transition-colors">
                       <Minus size={12} className="text-[var(--text-primary)]" />
                     </button>
                     <span className="text-sm text-[var(--text-primary)] w-6 text-center">{item.quantity}</span>
-                    <button onClick={() => updateCart(item.productId, item.quantity + 1)}
+                    <button onClick={() => updateCart(item.id, item.quantity + 1)}
                       className="w-6 h-6 bg-[var(--card-hover-bg)] rounded-md flex items-center justify-center hover:bg-purple-500/20 transition-colors">
                       <Plus size={12} className="text-[var(--text-primary)]" />
                     </button>
-                    <button onClick={() => removeFromCart(item.productId)}
+                    <button onClick={() => removeFromCart(item.id)}
                       className="ml-auto p-1 text-red-400 hover:text-red-300 transition-colors">
                       <Trash2 size={14} />
                     </button>
